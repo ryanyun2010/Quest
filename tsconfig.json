@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "types": ["@webgpu/types"],
+        "target": "ESNext",
+        "strict": true,
+        "outDir": "out",
+    },
+    "include": ["./ts/**/*.ts"],
+}
