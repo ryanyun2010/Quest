@@ -1,5 +1,5 @@
 'use strict';
-import {PTriangle as Triangle, Position, Color, PQuad as Quad, PRect as Rect, Vert, VertList} from './RenderingHelpers.js';
+import { PTriangle as Triangle, Position, Color, PQuad as Quad, PRect as Rect, Vert, VertList } from './RenderingHelpers.js';
 const SHADER = `
     struct VertexOut {
     @builtin(position) position : vec4f,
@@ -26,7 +26,6 @@ const SHADER = `
     let VERT: VertList = new VertList();
     setInterval(function(){
         VERT.concat(new Rect(new Position(Math.random() * 2000 - 1000,Math.random() * 1500 - 750), 300, 300, new Color(Math.random() * 255,Math.random() * 255,Math.random() * 255,255)).getVert());
-        // console.log(VERT.length);
     },1);
 
 export class RenderingEngine {
@@ -71,24 +70,23 @@ export class RenderingEngine {
         await this.setupVertexBuffers();
         this.setupPipeline();
     }
-    async getVertices(cameraPos: Position, FOVWidth: number, FOVHeight: number): Promise<VertList>{
-        let vert: VertList = new VertList();;
-        for(var gameObject of this.gameObjects){
-            vert.concat(gameObject.sprite.getVert().offset(cameraPos.inverse()));
-        } 
+    async getVertices(cameraPos: Position, FOVWidth: number, FOVHeight: number): Promise<number[]>{
+        const vert: number[] = [];
+        for (const gameObject of this.gameObjects) {
+            vert.push(...gameObject.sprite.getVert().offset(cameraPos.inverse()).getRaw());
+        }
         return vert;
     }
 
     async render(cameraPos: Position, FOVWidth: number, FOVHeight: number): Promise<void>{
-        
+        this.gameObjects.push(new GameObject(new Rect(new Position(Math.random() * 2000 - 1000,Math.random() * 1500 - 750), 300, 300, new Color(Math.random() * 255,Math.random() * 255,Math.random() * 255,255))));
         if(this.device == null){throw new Error("Device not initialized, try calling initWebGPU() first");}
-        // console.time("b");
-        let vert2 = new Float32Array((await this.getVertices(cameraPos,FOVWidth,FOVHeight)).getRaw());
-        console.log(vert2);
+        let vert2 = new Float32Array((await this.getVertices(cameraPos,FOVWidth,FOVHeight)));
         const vertexb: GPUBuffer = this.device.createBuffer({
             size: vert2.byteLength, // make it big enough to store vertices in
             usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
         });
+        
         this.device.queue.writeBuffer(vertexb, 0, vert2, 0, vert2.length);
         this.renderPass(vertexb);
     }
@@ -113,7 +111,6 @@ export class RenderingEngine {
         passEncoder.draw(vertexBuffer.size/32,1,0,0);
         passEncoder.end();
         this.device.queue.submit([this.commandEncoder.finish()]);
-        // console.timeEnd("b");
     }
 
     async initWebGPU(): Promise<void>{

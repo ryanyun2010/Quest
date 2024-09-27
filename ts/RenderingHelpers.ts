@@ -143,7 +143,7 @@ export class VertList{
     getRaw(): number[]{
         let out: number[] = [];
         for(var vert of this.verts){
-            out = [...out,...vert.getRaw()];
+            out.push(...vert.getRaw());
         }
         return out;
     }

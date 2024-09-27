@@ -3,7 +3,7 @@
         "types": ["@webgpu/types"],
         "target": "ESNext",
         "strict": true,
-        "outDir": "out",
+        "outDir": "out"
     },
     "include": ["./ts/**/*.ts"],
 }
