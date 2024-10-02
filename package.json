@@ -1,25 +1,26 @@
 {
-    "dependencies": {
-        "@webgpu/types": "^0.1.46",
-        "tsc": "^2.0.4"
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.11.1",
-        "@typescript-eslint/parser": "^5.62.0",
-        "eslint": "^8.57.1",
-        "globals": "^15.9.0",
-        "prettier": "^3.3.3",
-        "prettier-eslint": "^16.3.0",
-        "typescript": "^4.9.5",
-        "typescript-eslint": "^8.7.0",
-        "vite": "^5.4.8"
-    },
-    "prettier": {
-        "trailinsgComma": "all",
-        "tabWidth": 4,
-        "semi": true,
-        "singleQuote": true,
-        "printWidth": 120,
-        "useTabs": true
-    }
+	"dependencies": {
+		"@types/dom-webcodecs": "^0.1.11",
+		"@webgpu/types": "^0.1.46",
+		"tsc": "^2.0.4"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.11.1",
+		"@typescript-eslint/parser": "^5.62.0",
+		"eslint": "^8.57.1",
+		"globals": "^15.9.0",
+		"prettier": "^3.3.3",
+		"prettier-eslint": "^16.3.0",
+		"typescript": "^5.1.0",
+		"typescript-eslint": "^8.7.0",
+		"vite": "^5.4.8"
+	},
+	"prettier": {
+		"trailinsgComma": "all",
+		"tabWidth": 4,
+		"semi": true,
+		"singleQuote": true,
+		"printWidth": 120,
+		"useTabs": true
+	}
 }

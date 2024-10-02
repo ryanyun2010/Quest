@@ -1,5 +1,5 @@
 'use strict';
-import { Position, Color, PRect as Rect, VertList } from './RenderingHelpers.js';
+import { Position, Color, PRect as Rect } from './RenderingHelpers.js';
 const SHADER = `
     struct VertexOut {
     @builtin(position) position : vec4f,
@@ -22,47 +22,37 @@ const SHADER = `
     return fragData.color;
     }
 `;
+
 export class RenderingEngine {
-	adapter: GPUAdapter | null;
-	device: GPUDevice | null;
+	adapter: GPUAdapter | null = null;
+	device: GPUDevice | null = null;
 	shader: string;
-	shaderModule: GPUShaderModule | null;
-	canvas: HTMLCanvasElement | null;
-	context: GPUCanvasContext | null;
-	vertexBufferLayout: GPUVertexBufferLayout[] | null;
-	pipelineDescriptor: GPURenderPipelineDescriptor | null;
-	renderPipeline: GPURenderPipeline | null;
-	commandEncoder: GPUCommandEncoder | null;
-	renderPassDescriptor: GPURenderPassDescriptor | null;
+	shaderModule: GPUShaderModule | null = null;
+	canvas: HTMLCanvasElement | null = null;
+	context: GPUCanvasContext | null = null;
+	vertexBufferLayout: GPUVertexBufferLayout[] | null = null;
+	pipelineDescriptor: GPURenderPipelineDescriptor | null = null;
+	renderPipeline: GPURenderPipeline | null = null;
+	commandEncoder: GPUCommandEncoder | null = null;
+	renderPassDescriptor: GPURenderPassDescriptor | null = null;
 	backgroundColor: GPUColor | undefined;
-	vertices: number[] | null;
+	vertices: number[] | null = null;
 	gameObjects: GameObject[];
 
 	constructor() {
 		this.shader = SHADER;
 		this.backgroundColor = { r: 0.0, g: 0.5, b: 1.0, a: 1.0 };
-		this.vertices = null;
+		// this.vertices = null;
 		this.gameObjects = [
 			new GameObject(
 				new Rect(
 					new Position(Math.random() * 2000 - 1000, Math.random() * 1500 - 750),
-					300,
-					300,
+					Math.random() * 600 - 500,
+					Math.random() * 600 - 500,
 					new Color(Math.random() * 255, Math.random() * 255, Math.random() * 255, 255),
 				),
 			),
 		];
-
-		this.adapter = null;
-		this.device = null;
-		this.shaderModule = null;
-		this.canvas = null;
-		this.context = null;
-		this.vertexBufferLayout = null;
-		this.pipelineDescriptor = null;
-		this.renderPipeline = null;
-		this.commandEncoder = null;
-		this.renderPassDescriptor = null;
 	}
 
 	async setup(): Promise<void> {
@@ -72,6 +62,7 @@ export class RenderingEngine {
 		await this.setupVertexBuffers();
 		this.setupPipeline();
 	}
+
 	async getVertices(cameraPos: Position, FOVWidth: number, FOVHeight: number): Promise<number[]> {
 		const vert: number[] = [];
 		for (const gameObject of this.gameObjects) {
@@ -79,6 +70,7 @@ export class RenderingEngine {
 		}
 		return vert;
 	}
+
 	async render(cameraPos: Position, FOVWidth: number, FOVHeight: number): Promise<void> {
 		this.gameObjects.push(
 			new GameObject(
@@ -90,6 +82,7 @@ export class RenderingEngine {
 				),
 			),
 		);
+		console.log(this.gameObjects.length);
 		if (this.device == null) {
 			throw new Error('Device not initialized, try calling initWebGPU() first');
 		}
@@ -228,7 +221,6 @@ export class RenderingEngine {
 		};
 		this.renderPipeline = this.device.createRenderPipeline(this.pipelineDescriptor);
 	}
-	async setCamera(camera: Camera): Promise<void> {}
 }
 
 export class Camera {
@@ -249,9 +241,14 @@ export class Camera {
 		this.renderingEngine.render(this.position, this.FOVWidth, this.FOVHeight);
 	}
 }
+
 export class GameObject {
 	sprite: any;
 	constructor(sprite: any) {
 		this.sprite = sprite;
+	}
+
+	collisionBox(): number[] {
+		return [...this.sprite.getPositions()];
 	}
 }
